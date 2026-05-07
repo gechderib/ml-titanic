@@ -1,0 +1,14 @@
+version: '3.9'
+
+services:
+  fastapi_app:
+    build: .
+    container_name: fastapi_app
+
+    ports:
+      - "8006:8006"
+
+    volumes:
+      - .:/app
+
+    restart: unless-stopped
