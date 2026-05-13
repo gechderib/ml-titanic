@@ -38,7 +38,7 @@ def train_model(train_file: str, test_file: str, model_file: str):
 
     model = LogisticRegression(max_iter=1500, random_state=42)
     model.fit(X_train, y_train)
-
+    print("x_test columns:", X_test)
     predictions = model.predict(X_test)
     accuracy = accuracy_score(y_test, predictions)
     print(f'Test accuracy: {accuracy:.4f}')

@@ -1,2 +1,48 @@
+# load model pkl file and make prediction on new data
+import os
+import pickle
+from pathlib import Path
 
-# def test_model
+import pandas as pd
+from app.schemas import PredictionRequest, PredictionResponse
+from dotenv import load_dotenv
+
+load_dotenv()
+
+MODEL_PATH = os.getenv('MODEL_PATH', './models')
+MODEL_FILENAME = os.getenv('MODEL_FILENAME', 'titanic_model.pkl')
+
+def load_model(model_file: str):
+    model_path = Path(model_file)
+    if not model_path.exists():
+        raise FileNotFoundError(f"Model file not found: {model_path}")
+
+    with open(model_file, 'rb') as f:
+        model = pickle.load(f)
+    return model
+
+def _build_features(input_data: PredictionRequest) -> pd.DataFrame:
+    sex_value = input_data.sex.strip().lower()
+    if sex_value not in {"male", "female"}:
+        raise ValueError("sex must be 'male' or 'female'")
+
+    sex_encoded = 0 if sex_value == "female" else 1
+
+    return pd.DataFrame([
+        {
+            "Pclass": input_data.pclass,
+            "Sex": sex_encoded,
+            "Age": input_data.age,
+            "SibSp": input_data.SibSp,
+            "Parch": input_data.Parch,
+            "Fare": input_data.fare,
+        }
+    ])
+
+def predict(input_data: PredictionRequest) -> PredictionResponse:
+    model_file = os.path.join(MODEL_PATH, MODEL_FILENAME)
+    model = load_model(model_file)
+    features = _build_features(input_data)
+    prediction = model.predict(features)
+    probability = model.predict_proba(features)[0][1]
+    return PredictionResponse(survived=bool(prediction[0]), probability=float(probability))

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 
 from app.schemas import PredictionRequest, PredictionResponse
-
+from app.model.predict import predict
 
 app = FastAPI()
 
@@ -12,6 +12,6 @@ def read_root():
 
 
 @app.post("/prediction", response_model=PredictionResponse)
-def predict(request: PredictionRequest):
-    # Placeholder for actual prediction logic
-    return PredictionResponse(survived=True, probability=0.8)
+def predictResult(request: PredictionRequest):
+    result = predict(request)
+    return result

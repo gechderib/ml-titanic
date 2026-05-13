@@ -5,7 +5,8 @@ class PredictionRequest(BaseModel):
     sex: str
     fare: float
     pclass: int
-
+    SibSp: int
+    Parch: int
 
 class PredictionResponse(BaseModel):
     survived: bool
