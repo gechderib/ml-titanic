@@ -27,7 +27,9 @@ def _build_features(input_data: PredictionRequest) -> pd.DataFrame:
         raise ValueError("sex must be 'male' or 'female'")
 
     sex_encoded = 0 if sex_value == "female" else 1
-
+    # embarked_encoded = 0 if input_data.Embarked == "S" else (1 if input_data.Embarked == "C" else 2)
+    # title_encoded = 0 if input_data.Title == "Mr" else (1 if input_data.Title == "Miss" else (2 if input_data.Title == "Mrs" else 3))
+    
     return pd.DataFrame([
         {
             "Pclass": input_data.pclass,
@@ -36,6 +38,10 @@ def _build_features(input_data: PredictionRequest) -> pd.DataFrame:
             "SibSp": input_data.SibSp,
             "Parch": input_data.Parch,
             "Fare": input_data.fare,
+            "Embarked": embarked_encoded,   
+            "FamilySize": input_data.FamilySize,
+            "IsAlone": int(input_data.IsAlone), 
+            "Title": title_encoded          
         }
     ])
 

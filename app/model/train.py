@@ -36,7 +36,7 @@ def train_model(train_file: str, test_file: str, model_file: str):
     X_test = test_df.drop('Survived', axis=1)
     y_test = test_df['Survived']
 
-    model = LogisticRegression(max_iter=1500, random_state=42)
+    model = LogisticRegression(max_iter=1000, random_state=42)
     model.fit(X_train, y_train)
     print("x_test columns:", X_test)
     predictions = model.predict(X_test)
