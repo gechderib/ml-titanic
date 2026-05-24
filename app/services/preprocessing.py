@@ -20,22 +20,38 @@ def preprocess_data(df):
     df['Age'].fillna(df['Age'].median(), inplace=True)
 
     # Encode categorical variables
-    label_encoder = LabelEncoder()
-    df['Sex'] = label_encoder.fit_transform(df['Sex'])
-    df['Embarked'].fillna(df['Embarked'].mode()[0], inplace=True)
-    df['Embarked'] = label_encoder.fit_transform(df['Embarked'])
+    sex_map = {
+        "male":0,
+        "female":1
+    }
+    df['Sex'] = df['Sex'].map(sex_map).astype(int)
     
-    # add family size feature FamilySize = SibSp + Parch + 1
-    df['FamilySize'] = df['SibSp'] + df['Parch'] + 1
-    df['IsAlone'] = (df['FamilySize'] == 1).astype(int)
+    # embarked_map = {
+    #     "S": 0,
+    #     "C": 1,
+    #     "Q": 2
+    # }
+    # df['Embarked'].fillna(df['Embarked'].mode()[0], inplace=True)
+    # df['Embarked'] = df['Embarked'].map(embarked_map).astype(int)
     
-    # from name extract title and encode it Mr, Mrs, Miss, Master,sir also the title has to be in [Mr, Mrs, Miss, Master, Sir] if not use mode of title
-    df['Title'] = df['Name'].str.extract(' ([A-Za-z]+)\.', expand=False)
+    # df['FamilySize'] = df['SibSp'] + df['Parch'] + 1
+    # df['IsAlone'] = (df['FamilySize'] == 1).astype(int)
+    
+    # # from name extract title and encode it Mr, Mrs, Miss, Master,sir also the title has to be in [Mr, Mrs, Miss, Master, Sir] if not use mode of title
+    # title_map = {
+    #     "Mr": 0,
+    #     "Miss": 1,
+    #     "Mrs": 2,
+    #     "Master": 3,
+    #     "Sir": 4,
+    #     "Other": 5
+    # }
+    # df['Title'] = df['Name'].str.extract(' ([A-Za-z]+)\.', expand=False)
     # df['Title'].fillna(df['Title'].mode()[0], inplace=True)
-    # df['Title'] = df['Title'].apply(lambda x: x if x in ['Mr', 'Mrs', 'Miss', 'Master', 'Sir'] else 'Other')
-    # df['Title'] = label_encoder.fit_transform(df['Title'])
+    # df['Title'] = df['Title'].map(title_map).fillna(title_map['Other']).astype(int)
+    
     # Drop unnecessary columns
-    df.drop(['Name', 'Ticket', 'Cabin','PassengerId'], axis=1, inplace=True)
+    df.drop(['Name', 'Ticket', 'Cabin','PassengerId', 'Embarked'], axis=1, inplace=True)
     return df
 
 def process_and_save_data(input_file, output_file):

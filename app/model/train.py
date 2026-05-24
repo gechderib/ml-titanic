@@ -5,7 +5,7 @@ from pathlib import Path
 
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 load_dotenv()
 
@@ -40,9 +40,14 @@ def train_model(train_file: str, test_file: str, model_file: str):
     model.fit(X_train, y_train)
     print("x_test columns:", X_test)
     predictions = model.predict(X_test)
-    accuracy = accuracy_score(y_test, predictions)
-    print(f'Test accuracy: {accuracy:.4f}')
-
+    
+    accuracy = accuracy_score(y_test, predictions)    
+    precision = precision_score(y_test, predictions)
+    recall = recall_score(y_test, predictions)
+    f1 = f1_score(y_test, predictions)
+    
+    print(f'Test accuracy: {accuracy:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}, F1 Score: {f1:.4f}')
+    
     model_path = Path(model_file)
     ensure_directory(model_path.parent)
     with open(model_path, 'wb') as f:

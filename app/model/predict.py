@@ -25,11 +25,34 @@ def _build_features(input_data: PredictionRequest) -> pd.DataFrame:
     sex_value = input_data.sex.strip().lower()
     if sex_value not in {"male", "female"}:
         raise ValueError("sex must be 'male' or 'female'")
-
-    sex_encoded = 0 if sex_value == "female" else 1
-    # embarked_encoded = 0 if input_data.Embarked == "S" else (1 if input_data.Embarked == "C" else 2)
-    # title_encoded = 0 if input_data.Title == "Mr" else (1 if input_data.Title == "Miss" else (2 if input_data.Title == "Mrs" else 3))
     
+    sex_map = {
+        "male":0,
+        "female":1
+    }
+    sex_encoded = sex_map.get(sex_value, 0)
+    
+    embarked_value = input_data.Embarked.strip().upper()
+    if embarked_value not in {"S", "C", "Q"}:
+        raise ValueError("Embarked must be 'S', 'C', or 'Q'")
+    embarked_map = {
+        "S": 0,
+        "C": 1,
+        "Q": 2
+    }
+    embarked_encoded = embarked_map.get(embarked_value, 0)
+    
+    title_value = input_data.Title.strip().capitalize()
+    title_map = {
+        "Mr": 0,
+        "Miss": 1,
+        "Mrs": 2,
+        "Master": 3,
+        "Sir": 4,
+        "Other": 5
+    }
+    title_encoded = title_map.get(title_value, title_map['Other'])
+        
     return pd.DataFrame([
         {
             "Pclass": input_data.pclass,
