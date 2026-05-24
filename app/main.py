@@ -10,7 +10,7 @@ app = FastAPI()
 def read_root():
     return {"Hello": "World"}
 
-
+# swagger add with defautl value
 @app.post("/prediction", response_model=PredictionResponse)
 def predictResult(request: PredictionRequest):
     result = predict(request)

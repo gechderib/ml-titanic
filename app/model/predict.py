@@ -61,14 +61,15 @@ def _build_features(input_data: PredictionRequest) -> pd.DataFrame:
             "SibSp": input_data.SibSp,
             "Parch": input_data.Parch,
             "Fare": input_data.fare,
-            "Embarked": embarked_encoded,   
-            "FamilySize": input_data.FamilySize,
-            "IsAlone": int(input_data.IsAlone), 
-            "Title": title_encoded          
+            # "Embarked": embarked_encoded,   
+            # "FamilySize": input_data.FamilySize,
+            # "IsAlone": int(input_data.IsAlone), 
+            # "Title": title_encoded          
         }
     ])
 
 def predict(input_data: PredictionRequest) -> PredictionResponse:
+    
     model_file = os.path.join(MODEL_PATH, MODEL_FILENAME)
     model = load_model(model_file)
     features = _build_features(input_data)
