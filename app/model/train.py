@@ -4,7 +4,7 @@ import pickle
 from pathlib import Path
 
 import pandas as pd
-from sklearn.linear_model import LogisticRegression
+from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score, confusion_matrix, precision_score, recall_score, f1_score
@@ -53,9 +53,15 @@ def train_model(train_file: str, test_file: str, model_file: str):
     # predictions = model.predict(X_test)
     
     # ### Train using random forest
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
+    # model = RandomForestClassifier(n_estimators=100, random_state=42)
+    # model.fit(X_train, y_train)
+    # predictions = model.predict(X_test)
+    
+    # ### Train using linear regression
+    model = LinearRegression()
     model.fit(X_train, y_train)
     predictions = model.predict(X_test)
+    predictions = (predictions >= 0.5).astype(int)  # Convert to binary predictions based on a threshold of 0.5
     
     # Out of all predictions, how many were correct?
     # Formula:
@@ -68,12 +74,12 @@ def train_model(train_file: str, test_file: str, model_file: str):
     #     Precision = True Positives / (True Positives + False Positives)
     precision = precision_score(y_test, predictions)
     
-    
-    recall = recall_score(y_test, predictions)
-
     # Out of all actual survivors, how many did the model successfully find?
     # Formula:
     #     Recall = True Positives / (True Positives + False Negatives)
+
+    recall = recall_score(y_test, predictions)
+
     f1 = f1_score(y_test, predictions)
     
     print(f'Test accuracy: {accuracy:.4f}, Precision: {precision:.4f}, Recall: {recall:.4f}, F1 Score: {f1:.4f}')
