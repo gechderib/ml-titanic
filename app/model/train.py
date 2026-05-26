@@ -43,9 +43,9 @@ def train_model(train_file: str, test_file: str, model_file: str):
     y_test = test_df['Survived']
 
     # ### Train a logistic regression model on the training data
-    # model = LogisticRegression(max_iter=1000, random_state=42)
-    # model.fit(X_train, y_train)
-    # predictions = model.predict(X_test)
+    model = LogisticRegression(max_iter=1000, random_state=42)
+    model.fit(X_train, y_train)
+    predictions = model.predict(X_test)
     
     # ### Train using decision tree
     # model = DecisionTreeClassifier(random_state=42)
@@ -58,10 +58,10 @@ def train_model(train_file: str, test_file: str, model_file: str):
     # predictions = model.predict(X_test)
     
     # ### Train using linear regression
-    model = LinearRegression()
-    model.fit(X_train, y_train)
-    predictions = model.predict(X_test)
-    predictions = (predictions >= 0.5).astype(int)  # Convert to binary predictions based on a threshold of 0.5
+    # model = LinearRegression()
+    # model.fit(X_train, y_train)
+    # predictions = model.predict(X_test)
+    # predictions = (predictions >= 0.5).astype(int)  # Convert to binary predictions based on a threshold of 0.5
     
     # Out of all predictions, how many were correct?
     # Formula:
