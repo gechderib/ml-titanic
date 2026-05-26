@@ -38,22 +38,46 @@ def preprocess_data(df):
     # df['IsAlone'] = (df['FamilySize'] == 1).astype(int)
     
     # # from name extract title and encode it Mr, Mrs, Miss, Master,sir also the title has to be in [Mr, Mrs, Miss, Master, Sir] if not use mode of title
-    # title_map = {
-    #     "Mr": 0,
-    #     "Miss": 1,
-    #     "Mrs": 2,
-    #     "Master": 3,
-    #     "Sir": 4,
-    #     "Other": 5
-    # }
+    title_map = {
+        "Mr": 0,
+        "Miss": 1,
+        "Mrs": 2,
+        "Master": 3,
+        "Sir": 4,
+        "Other": 5
+    }
     # df['Title'] = df['Name'].str.extract(' ([A-Za-z]+)\.', expand=False)
     # df['Title'].fillna(df['Title'].mode()[0], inplace=True)
     # df['Title'] = df['Title'].map(title_map).fillna(title_map['Other']).astype(int)
+    # df['Title'] = df['Title'].apply(simplify_title).map(title_map).fillna(title_map['Other']).astype(int)
     
     # Drop unnecessary columns
     df.drop(['Name', 'Ticket', 'Cabin','PassengerId', 'Embarked'], axis=1, inplace=True)
     return df
 
+def simplify_title(title):
+
+    if title in ['Mr']:
+        return 'Mr'
+
+    elif title in ['Miss', 'Ms', 'Mlle']:
+        return 'Miss'
+
+    elif title in ['Mrs', 'Mme']:
+        return 'Mrs'
+
+    elif title in ['Master']:
+        return 'Master'
+
+    elif title in ['Dr', 'Rev', 'Major', 'Col', 'Capt']:
+        return 'Officer'
+
+    elif title in ['Lady', 'Countess', 'Sir', 'Don', 'Jonkheer', 'Dona']:
+        return 'Royalty'
+
+    else:
+        return 'Other'
+    
 def process_and_save_data(input_file, output_file):
     df = pd.read_csv(input_file)
     processed_df = preprocess_data(df)
